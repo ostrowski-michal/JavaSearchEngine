@@ -13,6 +13,7 @@ Test.java
 Created: Michal Ostrowski, 2022-04-29
 Purpose: Class is created to compare two solutions (old one and improved) by measuring time
 for creating index and performing query
+Test is performed on the file file.txt from the files folder
 */
 public class Test {
     public static void main(String[] args) {
