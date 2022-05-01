@@ -3,7 +3,7 @@ package ostrowski.michal;
 import java.util.*;
 
 /*
-ImprovedSearchEngine.java
+BasicTokenizer.java
 Created: Michal Ostrowski, 2022-04-28
 Purpose: Class implements Tokenizer interface and implements its methods
 */
