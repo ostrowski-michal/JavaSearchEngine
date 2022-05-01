@@ -1,0 +1,85 @@
+
+From SearchEngine
+
+
+    //using set of Documents
+    private Map<String, Set<Document>> indexWithSet;
+
+     public void createIndexUsingSetWithDocument() {
+            indexWithSet = new Hashtable<>();
+            mapToIndexSet();
+        }
+
+        public Collection<Document> performQuerySet(String term) {
+            return indexWithSet.getOrDefault(term.toLowerCase(), Collections.emptySet());
+        }
+
+        private void mapToIndexSet() {
+            // Check if the list is null - Inform the user
+            if (documents == null)
+                System.out.println("Cannot build an inverted index from null object.");
+                // Check if the list is empty - Inform the user
+            else if (documents.isEmpty())
+            {
+                numOfDocuments = 0;
+                System.out.println("List of documents is empty.");
+            }
+            // If everything is ok save the total number of documents in the list to instance variable
+            // and map terms and documents to inverted index
+            else
+            {
+                for (String document : documents)
+                    // Check if the document is not null, if it is null -> skip
+                    if (document != null) {
+                        numOfDocuments++;
+                        mapToIndexSet(document);
+                    }
+            }
+        }
+
+        private void mapToIndexSet(String document) {
+            Map<String, Double> tokensMap = tokenizer.tokenizeDocument(document);
+
+            Document doc = new Document(document, tokensMap);
+
+            for (Map.Entry<String, Double> token : tokensMap.entrySet() ){
+                DocumentsComparator comparator = new DocumentsComparator();
+                comparator.setToken(token.getKey());
+                if (indexWithSet.containsKey(token.getKey())) {
+                    indexWithSet.get(token.getKey()).add(doc);
+                }
+                else {
+                    Set<Document> documents = new TreeSet<>(comparator){
+                        {add(doc);}
+                    };
+                    indexWithSet.put(token.getKey(), documents);
+                }
+            }
+        }
+
+
+
+FROM Test
+
+ // Testing ImprovedSearchEngine with Set
+        System.out.println("Testing ImprovedSearchEngine using Set:\n");
+
+        // Indexing
+        System.out.print("\tIndexing documents...\t");
+        start = Instant.now();
+        Tokenizer tokenizer = new BasicTokenizer();
+        ImprovedSearchEngine engine = new ImprovedSearchEngine(sample);
+        engine.setTokenizer(tokenizer);
+        engine.createIndexUsingSetWithDocument();
+        finish = Instant.now();
+        timeElapsed = Duration.between(start, finish).toMillis();
+        System.out.println(String.format(result, timeElapsed));
+
+        // Querying - simulate querying n times
+        System.out.print(String.format("\tPerforming %d queries\t", queries));
+        start = Instant.now();
+        for (int i = 0; i < queries; i++)
+            engine.performQuerySet(query);
+        finish = Instant.now();
+        timeElapsed = Duration.between(start, finish).toMillis();
+        System.out.println(String.format(result, timeElapsed));

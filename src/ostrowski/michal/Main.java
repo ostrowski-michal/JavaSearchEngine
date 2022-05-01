@@ -1,6 +1,7 @@
 package ostrowski.michal;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,21 +13,34 @@ Purpose: Main class to test how the SearchEngine class works
 public class Main {
 
     public static void main(String[] args) {
+
+        Tokenizer tokenizer = new BasicTokenizer();
+
+
         // Create simple list with documents
         List<String> sampleDocumentList = prepareSampleDocumentList();
 
-        // Create an instance of SearchEngine object - constructor takes the list of strings
-        SearchEngine searchEngine = new SearchEngine(sampleDocumentList);
+        // Create an instance of ImprovedSearchEngine
+        SearchEngine engine = new ImprovedSearchEngine(sampleDocumentList);
+        engine.setTokenizer(tokenizer);
+        engine.createIndexStructure();
 
-        //run start method
-        start(searchEngine);
+        Collection<Document> documents = engine.performQuery("brown");
+        for (Object document : documents)
+            System.out.println(document);
 
+//
+//        // Create an instance of SearchEngine object - constructor takes the list of strings
+//        SearchEngine searchEngine = new SearchEngine(sampleDocumentList);
+//
+//        //run start method
+//        start(searchEngine);
     }
 
     /*
     Provide user interface
      */
-    private static void start(SearchEngine engine)
+    private static void start(BasicSearchEngine engine)
     {
         int choice = -1;    //Invalid option
 
